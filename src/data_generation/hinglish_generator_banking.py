@@ -89,7 +89,7 @@ class HinglishBankingGenerator:
 
             "Nair", "Iyer", "Menon", "Pillai", "Naidu", "Shetty", "Rao", "Khan",
             "Ansari", "Syed", "Farooqi", "Qureshi", "Ali", "Fernandes", "Pereira", 
-            "Rodrigues", "Thomas", "George", "Mathew", "John", "Singh", "Kaur", 
+            "Rodrigues", "Thomas", "George", "Mathew", "John", "Singh", "Kaur",
             "Gill", "Sandhu", "Dhillon", "Brar", "Bajwa", "Bains", "Chahal", "Lal", 
             "Bhatt", "Dubey", "Khandelwal", "Tandon", "Jadhav", "Ghosh", "Chatterjee"
         ]
@@ -110,23 +110,6 @@ class HinglishBankingGenerator:
 
 
         # banking + generic Hinglish templates
-        self.templates = [
-            "Hi, mera naam {GIVENNAME} {SURNAME} hai. Account balance check karna hai. Phone number {TELEPHONENUM} hai.",
-            "Mumbai branch mein ja kar withdrawal kiya. Email {EMAIL} pe statement bhej do.",
-            "{GIVENNAME} ji, aapka account number {ACCOUNTNUM} aur IFSC {IFSC} hai.",
-            "Mera Aadhaar number {AADHAAR} hai, KYC complete karna hai.",
-            "Please send the statement to {EMAIL} and call me at {TELEPHONENUM}.",
-            "Beneficiary ka IFSC {IFSC} and account {ACCOUNTNUM}. Transfer kar dena.",
-            "PAN {PAN} upload karke KYC complete karo.",
-            "Credit card {CREDITCARDNUM} se payment hua. Verify karlo.",
-            "{GIVENNAME} {SURNAME} ka address {BUILDINGNUM} {STREET}, {CITY} - {ZIPCODE}.",
-            "Mere driving license {DRIVERLICENSENUM} aur voter id {VOTERID} ready hai.",
-            "Main {CITY} mein rehta hun, age {AGE} hai. Mera number {TELEPHONENUM} hai.",
-            "Hello {GIVENNAME}, appointment on {DATE} at {TIME}.",
-            "Transaction id {TRANSACTIONID} se payment hua. Check karna hai."
-        ]
-
-
         self.templates = [
             "Hi, mera naam {GIVENNAME} {SURNAME} hai. Account balance check karna hai. Phone number {TELEPHONENUM} hai.",
             "Mumbai branch mein ja kar withdrawal kiya. Email {EMAIL} pe statement bhej do.",
