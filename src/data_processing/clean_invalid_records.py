@@ -1,5 +1,7 @@
 import json
 import re
+import argparse
+import os
 
 def is_valid_email(email: str) -> bool:
     return re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$", email) is not None
@@ -39,7 +41,13 @@ def clean_invalid_records(input_file, output_file):
     print(f"Removed invalids: {removed} | Final: {len(cleaned)}")
 
 if __name__ == "__main__":
-    clean_invalid_records(
-        input_file="data/synthetic/hinglish_banking_20k.jsonl",
-        output_file="data/processed/hinglish_banking_20k_clean.jsonl"
-    )
+    parser = argparse.ArgumentParser(description="Clean invalid records from dataset")
+    parser.add_argument("--input", "-i", required=True, help="Input JSONL file")
+    parser.add_argument("--output_dir", "-o", required=True, help="Output directory")
+    args = parser.parse_args()
+
+    os.makedirs(args.output_dir, exist_ok=True)
+    input_basename = os.path.basename(args.input).replace(".jsonl", "")
+    output_file = os.path.join(args.output_dir, f"{input_basename}_clean.jsonl")
+
+    clean_invalid_records(args.input, output_file)

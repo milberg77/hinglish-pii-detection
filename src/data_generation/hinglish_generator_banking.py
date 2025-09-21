@@ -108,7 +108,6 @@ class HinglishBankingGenerator:
             "Guntur", "Latur", "Gulbarga", "Mandi", "Jodhpur", "Aligarh"
         ]
 
-
         # banking + generic Hinglish templates
         self.templates = [
             "Hi, mera naam {GIVENNAME} {SURNAME} hai. Account balance check karna hai. Phone number {TELEPHONENUM} hai.",
@@ -334,82 +333,14 @@ class HinglishBankingGenerator:
         # quick validation fallback (if schema requires stricter, rely on _validate)
         return mail
 
-    def generate_aadhaar(self) -> str:
-        while True:
-            digits = ''.join(str(random.randint(0, 9)) for _ in range(12))
-            val = f"{digits[:4]} {digits[4:8]} {digits[8:]}"
-            if self._validate("AADHAAR", val):
-                return val
+    def generate_city(self) -> str:
+        return random.choice(self.indian_cities)
 
-    def generate_pan(self, surname: Optional[str] = None) -> str:
-        """
-        Generate PAN following the schema regex you provided:
-        pattern: ^[A-Z]{3}[PFCHAT][A-Z]\\d{4}[A-Z]$
-        We'll produce: 3 random letters + one of [PFCHAT] + surname initial (or random letter) + 4 digits + checksum letter
-        """
-        ent_types = list("PFCHAT")
-        for _ in range(20):
-            part1 = ''.join(random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ") for _ in range(3))
-            part2 = random.choice(ent_types)
-            if surname:
-                part3 = surname[0].upper()
-            else:
-                part3 = random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-            digits = ''.join(str(random.randint(0, 9)) for _ in range(4))
-            last = random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-            pan = f"{part1}{part2}{part3}{digits}{last}"
-            if self._validate("PAN", pan):
-                return pan
-        # fallback (shouldn't usually happen)
-        return pan
+    def generate_buildingnum(self) -> str:
+        return str(random.randint(1, 3999))
 
-    def generate_ifsc(self) -> str:
-        for _ in range(10):
-            bank = random.choice(self.bank_codes)
-            branch = ''.join(str(random.randint(0, 9)) for _ in range(6))
-            val = f"{bank}0{branch}"
-            if self._validate("IFSC", val):
-                return val
-        return val
-
-    def generate_accountnum(self) -> str:
-        # 9-18 digits
-        for _ in range(10):
-            length = random.randint(9, 18)
-            acc = ''.join(str(random.randint(0, 9)) for _ in range(length))
-            if self._validate("ACCOUNTNUM", acc):
-                return acc
-        return acc
-
-    def generate_voterid(self) -> str:
-        for _ in range(10):
-            pref = ''.join(random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ") for _ in range(3))
-            nums = ''.join(str(random.randint(0, 9)) for _ in range(7))
-            val = pref + nums
-            if self._validate("VOTERID", val):
-                return val
-        return val
-
-    def generate_drivinglicense(self) -> str:
-        # produce state(2 letters) + rto(2 digits) + year(4 digits) + 7-digit number, separated by '-' (matches schema)
-        # states = ["MH", "DL", "KA", "TN", "UP", "GJ", "WB"]
-        states = ["AP", "AN", "AR", "AS", "BR", "CG", "CH", "DN", "DD", "DL", "GA", "GJ", "HR", "HP", "JK", "JH", "KA", "KL", "LA", "LD", "MP", "MH", "MN", "ML", "MZ", "NL", "OD", "PY", "PB", "RJ", "SK", "TN", "TS", "TR", "UP", "UK", "WB"]
-        for _ in range(10):
-            state = random.choice(states)
-            rto = f"{random.randint(1,99):02d}"
-            year = str(random.randint(2009, 2022))
-            num = f"{random.randint(0, 9999999):07d}"
-            val = f"{state}-{rto}-{year}-{num}"
-            if self._validate("DRIVERLICENSENUM", val):
-                return val
-        return val
-
-    def generate_creditcard(self) -> str:
-        digits = ''.join(str(random.randint(0, 9)) for _ in range(16))
-        val = ' '.join(digits[i:i+4] for i in range(0, 16, 4))
-        if self._validate("CREDITCARDNUM", val):
-            return val
-        return val
+    def generate_street(self) -> str:
+        return random.choice(self.street_names)
 
     def generate_zipcode(self) -> str:
         val = ''.join(str(random.randint(0, 9)) for _ in range(6))
@@ -444,6 +375,83 @@ class HinglishBankingGenerator:
     def generate_age(self) -> str:
         val = str(random.randint(18, 99))
         if self._validate("AGE", val):
+            return val
+        return val
+
+    def generate_aadhaar(self) -> str:
+        while True:
+            digits = ''.join(str(random.randint(0, 9)) for _ in range(12))
+            val = f"{digits[:4]} {digits[4:8]} {digits[8:]}"
+            if self._validate("AADHAAR", val):
+                return val
+
+    def generate_pan(self, surname: Optional[str] = None) -> str:
+        """
+        Generate PAN following the schema regex you provided:
+        pattern: ^[A-Z]{3}[PFCHAT][A-Z]\\d{4}[A-Z]$
+        We'll produce: 3 random letters + one of [PFCHAT] + surname initial (or random letter) + 4 digits + checksum letter
+        """
+        ent_types = list("PFCHAT")
+        for _ in range(20):
+            part1 = ''.join(random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ") for _ in range(3))
+            part2 = random.choice(ent_types)
+            if surname:
+                part3 = surname[0].upper()
+            else:
+                part3 = random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+            digits = ''.join(str(random.randint(0, 9)) for _ in range(4))
+            last = random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+            pan = f"{part1}{part2}{part3}{digits}{last}"
+            if self._validate("PAN", pan):
+                return pan
+        # fallback (shouldn't usually happen)
+        return pan
+
+    def generate_voterid(self) -> str:
+        for _ in range(10):
+            pref = ''.join(random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ") for _ in range(3))
+            nums = ''.join(str(random.randint(0, 9)) for _ in range(7))
+            val = pref + nums
+            if self._validate("VOTERID", val):
+                return val
+        return val
+
+    def generate_drivinglicense(self) -> str:
+        # produce state(2 letters) + rto(2 digits) + year(4 digits) + 7-digit number, separated by '-' (matches schema)
+        # states = ["MH", "DL", "KA", "TN", "UP", "GJ", "WB"]
+        states = ["AP", "AN", "AR", "AS", "BR", "CG", "CH", "DN", "DD", "DL", "GA", "GJ", "HR", "HP", "JK", "JH", "KA", "KL", "LA", "LD", "MP", "MH", "MN", "ML", "MZ", "NL", "OD", "PY", "PB", "RJ", "SK", "TN", "TS", "TR", "UP", "UK", "WB"]
+        for _ in range(10):
+            state = random.choice(states)
+            rto = f"{random.randint(1,99):02d}"
+            year = str(random.randint(2009, 2022))
+            num = f"{random.randint(0, 9999999):07d}"
+            val = f"{state}-{rto}-{year}-{num}"
+            if self._validate("DRIVERLICENSENUM", val):
+                return val
+        return val
+    
+    def generate_accountnum(self) -> str:
+        # 9-18 digits
+        for _ in range(10):
+            length = random.randint(9, 18)
+            acc = ''.join(str(random.randint(0, 9)) for _ in range(length))
+            if self._validate("ACCOUNTNUM", acc):
+                return acc
+        return acc
+    
+    def generate_ifsc(self) -> str:
+        for _ in range(10):
+            bank = random.choice(self.bank_codes)
+            branch = ''.join(str(random.randint(0, 9)) for _ in range(6))
+            val = f"{bank}0{branch}"
+            if self._validate("IFSC", val):
+                return val
+        return val
+
+    def generate_creditcard(self) -> str:
+        digits = ''.join(str(random.randint(0, 9)) for _ in range(16))
+        val = ' '.join(digits[i:i+4] for i in range(0, 16, 4))
+        if self._validate("CREDITCARDNUM", val):
             return val
         return val
 
@@ -540,7 +548,7 @@ class HinglishBankingGenerator:
         given = self.generate_givenname()
         surname = self.generate_surname()
         fullname = f"{given} {surname}"
-        city = random.choice(self.indian_cities)
+        city = self.generate_city()
 
         entities: Dict[str, str] = {}
 
@@ -581,12 +589,11 @@ class HinglishBankingGenerator:
             entities["CREDITCARDNUM"] = self.generate_creditcard()
             template = template.replace("{CREDITCARDNUM}", entities["CREDITCARDNUM"])
         if "{BUILDINGNUM}" in template:
-            entities["BUILDINGNUM"] = str(random.randint(1, 9999))
+            entities["BUILDINGNUM"] = self.generate_buildingnum()
             template = template.replace("{BUILDINGNUM}", entities["BUILDINGNUM"])
         if "{STREET}" in template:
-            s = random.choice(self.street_names)
-            entities["STREET"] = s
-            template = template.replace("{STREET}", s)
+            entities["STREET"] = self.generate_street()
+            template = template.replace("{STREET}", entities["STREET"])
         if "{ZIPCODE}" in template:
             entities["ZIPCODE"] = self.generate_zipcode()
             template = template.replace("{ZIPCODE}", entities["ZIPCODE"])
@@ -614,10 +621,36 @@ class HinglishBankingGenerator:
 
 
         # small Hinglish flavor replacements (light touch)
-        if random.random() < 0.25:
-            template = template.replace("Please", random.choice(["Please", "Kripya", "Please bhai"]))
-        if random.random() < 0.15:
-            template = template.replace("please", random.choice(["please", "kripya"]))
+        # if random.random() < 0.25:
+        #     template = template.replace("Please", random.choice(["Please", "Kripya", "Please bhai"]))
+        # if random.random() < 0.15:
+        #     template = template.replace("please", random.choice(["please", "kripya"]))
+
+        # -------------------- Rich Hinglish variations --------------------
+        synonyms = {
+            "account": ["account", "khata", "a/c", "accnt"],
+            "balance": ["balance", "baki", "funds"],
+            "branch": ["branch", "shakha"],
+            "loan": ["loan", "karz"],
+            "credit card": ["credit card", "card"],
+            "deposit": ["deposit", "jama"],
+            "transaction": ["transaction", "len-den", "trnx"],
+            "failed": ["failed", "fail hua", "nahi hua"],
+            "check": ["check", "verify", "dekho", "dekh lo"],
+            "please": ["please", "kripya", "pls", "kindly", "please bhai"]
+        }
+
+        for key, vals in synonyms.items():
+            pattern = re.compile(rf"\b{key}\b", flags=re.IGNORECASE)
+            template = pattern.sub(lambda m: random.choice(vals), template)
+
+        # Add random spacing variation (double spaces, etc.)
+        template = re.sub(r"\s+", lambda _: " " * random.randint(1, 2), template)
+
+        # Add random casing variation (simulate typing)
+        template = "".join(
+            c.lower() if random.random() < 0.1 else c for c in template
+        )
 
         source_text = template
 

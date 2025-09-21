@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import argparse
 
 def load_jsonl(path):
     with open(path, "r", encoding="utf-8") as f:
@@ -9,11 +10,22 @@ def join_tokens(tokens):
     # Just join tokens with space, simple baseline
     return " ".join(tokens)
 
-if __name__ == "__main__":
+def main():
+    parser = argparse.ArgumentParser(description="Check overlap between train, val, and test datasets")
+    parser.add_argument("--suffix", type=str, default="", help="Optional suffix for files, e.g. '100k'")
+    args = parser.parse_args()
+
     base_dir = Path("data/processed/encoded")
-    train = load_jsonl(base_dir / "train.jsonl")
-    val = load_jsonl(base_dir / "val.jsonl")
-    test = load_jsonl(base_dir / "test.jsonl")
+
+    suffix = f"_{args.suffix}" if args.suffix else ""
+
+    train_path = base_dir / f"train{suffix}.jsonl"
+    val_path = base_dir / f"val{suffix}.jsonl"
+    test_path = base_dir / f"test{suffix}.jsonl"
+
+    train = load_jsonl(train_path)
+    val = load_jsonl(val_path)
+    test = load_jsonl(test_path)
 
     train_texts = {join_tokens(ex["tokens"]) for ex in train}
     val_texts = {join_tokens(ex["tokens"]) for ex in val}
@@ -31,3 +43,6 @@ if __name__ == "__main__":
         print("\nExamples in both train & test:")
         for example in list(overlap_train_test)[:5]:
             print(example)
+
+if __name__ == "__main__":
+    main()

@@ -27,12 +27,15 @@ def process_file(input_file, output_file):
 def main(args):
     os.makedirs(args.out_dir, exist_ok=True)
 
+    def suffixed_path(split_name):
+        return os.path.join(args.out_dir, f"{split_name}{('_' + args.suffix) if args.suffix else ''}.jsonl")
+
     if args.train:
-        process_file(args.train, os.path.join(args.out_dir, "train.jsonl"))
+        process_file(args.train, suffixed_path("train"))
     if args.val:
-        process_file(args.val, os.path.join(args.out_dir, "val.jsonl"))
+        process_file(args.val, suffixed_path("val"))
     if args.test:
-        process_file(args.test, os.path.join(args.out_dir, "test.jsonl"))
+        process_file(args.test, suffixed_path("test"))
 
     print(f"Preprocessing complete. Encoded files saved to {args.out_dir}")
 
@@ -43,6 +46,7 @@ if __name__ == "__main__":
     parser.add_argument("--val", type=str, help="Path to validation JSONL file")
     parser.add_argument("--test", type=str, help="Path to test JSONL file")
     parser.add_argument("--out_dir", type=str, required=True, help="Output directory")
+    parser.add_argument("--suffix", type=str, default="", help="Suffix to add before .jsonl in output filenames")
     args = parser.parse_args()
 
     main(args)
