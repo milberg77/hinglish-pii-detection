@@ -1,0 +1,27 @@
+# Ignore virtual environments
+venv/
+.env/
+
+# Ignore Python bytecode and caches
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore model checkpoints and results (optional - uncomment if needed)
+# models/
+# results/
+
+# Ignore notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore OS/system files
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log
+
+# Ignore Python egg info
+*.egg-info/
+dist/
+build/
