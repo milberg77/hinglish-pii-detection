@@ -8,7 +8,7 @@ __pycache__/
 *.pyo
 
 # Ignore model checkpoints and results (optional - uncomment if needed)
-# models/
+models/
 # results/
 
 # Ignore notebook checkpoints
