@@ -189,6 +189,7 @@ if __name__ == "__main__":
             num_labels=len(label_list),
             id2label=id2label,
             label2id=label2id,
+            ignore_mismatched_sizes=True
         )
     except Exception as e:
         print("Warning: Could not load the provided model as AutoModelForTokenClassification.")
