@@ -62,6 +62,7 @@ def controlled_split(
         with open(out_path, "w", encoding="utf-8") as f:
             count = 0
             for key in keyset:
+                random.shuffle(groups[key])
                 for rec in groups[key]:
                     f.write(json.dumps(rec, ensure_ascii=False) + "\n")
                     count += 1
