@@ -27,7 +27,7 @@ from datasets import Dataset
 from transformers import AutoTokenizer, AutoModelForTokenClassification, DataCollatorForTokenClassification, Trainer, TrainingArguments
 
 try:
-    from seqeval.metrics import classification_report, precision_score, recall_score, f1_score
+    from seqeval.metrics import classification_report as cr_dict, precision_score, recall_score, f1_score
     HAS_SEQEVAL = True
 except Exception:
     HAS_SEQEVAL = False
@@ -177,15 +177,25 @@ if __name__ == "__main__":
             }
             outf.write(json.dumps(out_rec, ensure_ascii=False) + "\n")
 
-    # Metrics
     if HAS_SEQEVAL:
         p = precision_score(true_label_seqs, pred_label_seqs)
         r = recall_score(true_label_seqs, pred_label_seqs)
         f = f1_score(true_label_seqs, pred_label_seqs)
-        report = classification_report(true_label_seqs, pred_label_seqs)
+
+        # full report as dict
+        report_dict = cr_dict(true_label_seqs, pred_label_seqs, output_dict=True)
+        report_text = cr_dict(true_label_seqs, pred_label_seqs)
+
         print("=== Seqeval Report ===")
-        print(report)
-        summary = {"precision": float(p), "recall": float(r), "f1": float(f)}
+        print(report_text)
+
+        summary = {
+            "precision": float(p),
+            "recall": float(r),
+            "f1": float(f),
+            "per_class": report_dict
+        }
+
     else:
         # token accuracy fallback
         total = 0

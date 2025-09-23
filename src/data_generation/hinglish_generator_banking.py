@@ -132,7 +132,7 @@ class HinglishBankingGenerator:
             "Driver license {DRIVERLICENSENUM} and passport {PASSPORTNUM} KYC ke liye upload karna hai.",
             "Nominee ke details: naam {FULLNAME}, age {AGE}, city {CITY}.",
             "Voter ID {VOTERID} aur Aadhaar {AADHAAR} dono verify kar do.",
-            "DOB {DATE} hai aur gender Male likha hai.",
+            "DOB {DATE} hai aur gender {GENDER} likha hai.",
             "Transaction {TRANSACTIONID} ko verify karo, time {TIME} tha.",
             "Address: {BUILDINGNUM}, {STREET}, {CITY}, {ZIPCODE}.",
             "Mera account freeze ho gaya hai. Account number {ACCOUNTNUM} hai.",
@@ -159,7 +159,7 @@ class HinglishBankingGenerator:
             "{FULLNAME} ne branch {CITY} se cheque deposit kiya.",
             "Please update address to {BUILDINGNUM} {STREET}, {CITY} {ZIPCODE}.",
             "Aadhaar {AADHAAR}, voter id {VOTERID}, driver license {DRIVERLICENSENUM} sab upload ho gaya.",
-            "Customer ka naam {FULLNAME}, DOB {DATE}, gender Female hai.",
+            "Customer ka naam {FULLNAME}, DOB {DATE}, gender {GENDER} hai.",
             "Payment with card {CREDITCARDNUM} on {DATE} failed.",
             "Branch visit {CITY} mein {DATE} at {TIME} scheduled hai.",
             "Passport {PASSPORTNUM} aur PAN {PAN} dono ka copy bhejna hai.",
@@ -606,6 +606,9 @@ class HinglishBankingGenerator:
         if "{AGE}" in template:
             entities["AGE"] = self.generate_age()
             template = template.replace("{AGE}", entities["AGE"])
+        if "{GENDER}" in template:
+            entities["GENDER"] = self.generate_gender()
+            template = template.replace("{GENDER}", entities["GENDER"])
         if "{DATE}" in template:
             entities["DATE"] = self.generate_date()
             template = template.replace("{DATE}", entities["DATE"])
@@ -643,14 +646,6 @@ class HinglishBankingGenerator:
         for key, vals in synonyms.items():
             pattern = re.compile(rf"\b{key}\b", flags=re.IGNORECASE)
             template = pattern.sub(lambda m: random.choice(vals), template)
-
-        # Add random spacing variation (double spaces, etc.)
-        template = re.sub(r"\s+", lambda _: " " * random.randint(1, 2), template)
-
-        # Add random casing variation (simulate typing)
-        template = "".join(
-            c.lower() if random.random() < 0.1 else c for c in template
-        )
 
         source_text = template
 
