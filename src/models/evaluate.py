@@ -101,6 +101,21 @@ def tokenize_and_align_labels(batch, tokenizer, label2id, max_seq_length):
     tokenized["labels"] = aligned
     return tokenized
 
+def convert_to_serializable(obj):
+    """Recursively convert NumPy types to Python native types for JSON serialization."""
+    if isinstance(obj, dict):
+        return {k: convert_to_serializable(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_to_serializable(v) for v in obj]
+    elif isinstance(obj, (np.integer, np.int64)):
+        return int(obj)
+    elif isinstance(obj, (np.floating, np.float64)):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    else:
+        return obj
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate token-classification model")
@@ -211,7 +226,7 @@ if __name__ == "__main__":
 
     # Save summary
     with open(out_dir / "metrics_summary.json", "w", encoding="utf-8") as fh:
-        json.dump(summary, fh, indent=2, ensure_ascii=False)
+        json.dump(convert_to_serializable(summary), fh, indent=2, ensure_ascii=False)
 
     print("Saved token-level predictions to:", jsonl_out)
     print("Saved metrics to:", out_dir / "metrics_summary.json")
